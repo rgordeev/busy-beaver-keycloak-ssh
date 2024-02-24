@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:19.0.1
+    command: ['start-dev --import-realm']
+    volumes:
+      - ./realm-config:/opt/keycloak/data/import
+      - ./ssh/keycloak-server.crt.pem:/opt/keycloak/conf/keycloak-server.crt.pem
+      - ./ssh/keycloak-server.key.pem:/opt/keycloak/conf/keycloak-server.key.pem
+    environment:
+      - KC_DB=dev-file
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HTTPS_CERTIFICATE_FILE=/opt/keycloak/conf/keycloak-server.crt.pem
+      - KC_HTTPS_CERTIFICATE_KEY_FILE=/opt/keycloak/conf/keycloak-server.key.pem
+      - KC_FEATURES=scripts
+      - KC_HTTP_PORT=9080
+      - KC_HTTPS_PORT=9443
+    ports:
+      - 127.0.0.1:9080:9080
+      - 127.0.0.1:9443:9443
